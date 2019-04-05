@@ -1,0 +1,59 @@
+package frc.robot.subsystems;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+
+import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+public class Lift extends Subsystem{
+
+	public double encoderCal = 1;
+	
+	public double encocderLiftlast = 0;
+
+    CANSparkMax SPARKLIFT = new CANSparkMax(RobotMap.SPARKLIFT, MotorType.kBrushless);
+    CANEncoder encoderLift = new CANEncoder(SPARKLIFT);
+
+    public Lift(){
+
+        double rampRate = 1;
+
+		SPARKLIFT.setInverted(false);
+		SPARKLIFT.setRampRate(rampRate);
+
+    }
+
+    //Function that actuate the lift
+    public void MoveLift(double liftSpeed){
+
+        SPARKLIFT.set(-liftSpeed);
+
+	}
+
+	public double getEncoder(){
+
+        double encoderVal = (encoderLift.getPosition() * encoderCal) - encocderLiftlast;
+
+        return encoderVal;
+    }
+
+    public void resetEncoder(){
+
+		encocderLiftlast = encoderLift.getPosition()* encoderCal;
+        
+    }
+
+    @Override
+	public void initDefaultCommand() {
+		// Set the default command for a subsystem here.
+		// setDefaultCommand(new MySpecialCommand());
+		//setDefaultCommand(new DriveArcade());
+	}
+
+}
